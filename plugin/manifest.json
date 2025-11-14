@@ -19,7 +19,7 @@
     {
       "matches": ["*://*.avans.one/*"],
       "css": ["css/main.css"],
-      "js": ["js/main.js", "js/constant.js", "js/LocationUtils.js"],
+      "js": ["js/content.js"],
       "run_at": "document_idle"
     }
   ]

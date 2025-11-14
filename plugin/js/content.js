@@ -1,22 +1,24 @@
-const getScheduleElement = (e) => {
-    return e.target.closest(SCHEDULE_SELECTOR);
-}
+// Constants
+const POPUP_SELECTOR = ".mbsc-flex-1-1.mbsc-popup-content";
+const SCHEDULE_SELECTOR = ".mbsc-schedule-event";
+const LOCATION_SELECTOR = ".calendar-module";
 
-const getCalenderLocation = (event) => {
-    return event.querySelector(LOCATION_SELECTOR)?.innerText || NO_LOCATION_ERROR;
-}
+const CUSTOM_LOCATION_WRAPPER = 'AOF-custom-location-wrapper';
+const CUSTOM_LOCATION_TEXT = 'AOF-custom-location-text';
 
-const getPopup = () => {
-    return document.querySelector(POPUP_SELECTOR);
-}
+const NO_LOCATION_ERROR = 'An Error occurred';
+const ERROR_TEXT_CLASS = 'AOF-error-text';
 
+const ERROR_COLOR = '#db3c30';
+
+// Helper functions
 const createLocationElement = (wrapper, location) => {
     const e = htmlLocationElement(location);
     wrapper.appendChild(e);
 }
 
 const updateLocationElement = (location) => {
-    const e = getLocationText();
+    const e = document.querySelector(`#${CUSTOM_LOCATION_TEXT}`);
     if (location == NO_LOCATION_ERROR && !e.classList.contains(ERROR_TEXT_CLASS)) {
         e.classList.add(ERROR_TEXT_CLASS);
     } else if (location != NO_LOCATION_ERROR) {
@@ -25,17 +27,9 @@ const updateLocationElement = (location) => {
     e.innerText = location;
 }
 
-const getLocationText = () => {
-    return document.querySelector(`#${CUSTOM_LOCATION_TEXT}`)
-}
-
-const getLocationElement = () => {
-    return document.querySelector(`#${CUSTOM_LOCATION_WRAPPER}`)
-}
-
 const injectPopup = (popup, location) => {
 
-    if (getLocationElement()) {
+    if (document.querySelector(`#${CUSTOM_LOCATION_WRAPPER}`)) {
         updateLocationElement(location)
         return
     }
@@ -64,3 +58,26 @@ const htmlLocationElement = (location) => {
     </div>`;
     return wrapper;
 }
+
+// Main event handler
+(() => {
+
+    document.addEventListener("click", e => {
+        const event = e.target.closest(SCHEDULE_SELECTOR);
+
+        if (!event) {
+            return;
+        }
+
+        const checkPopup = () => {
+            const popup = document.querySelector(POPUP_SELECTOR);
+            if (popup) {
+                retunCode = injectPopup(popup, event.querySelector(LOCATION_SELECTOR)?.innerText || NO_LOCATION_ERROR);
+            } else {
+                setTimeout(checkPopup, 30);
+            }
+        };
+        checkPopup();
+    });
+
+})();
